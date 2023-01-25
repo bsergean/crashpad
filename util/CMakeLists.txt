@@ -246,7 +246,10 @@ endif()
 
 if(LINUX OR ANDROID)
     if (LINUX)
-        find_package(CURL REQUIRED)
+        if(NOT CURL_FOUND) # Some other lib might bring libcurl already
+            find_package(CURL REQUIRED)
+        endif()
+
         target_include_directories(crashpad_util PRIVATE ${CURL_INCLUDE_DIRS})
         target_link_libraries(crashpad_util PRIVATE ${CURL_LIBRARIES})
         SET(HTTP_TRANSPORT_IMPL net/http_transport_libcurl.cc)
